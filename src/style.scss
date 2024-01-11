@@ -1,0 +1,118 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap");
+
+:root {
+  font-family: "Roboto", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  border: 1px solid;
+  padding: 4px 8px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+#app {
+  padding: 5px;
+  max-width: 320px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.controls__wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.message__wrapper {
+  min-height: 400px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 5px;
+  border: 1px solid;
+
+  &-item {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    background-color: #e5e5e5;
+
+    &-timestamp {
+      align-self: flex-end;
+      font-size: 14px;
+      font-weight: 300;
+    }
+  }
+}
+
+.chat-member-1 {
+  align-self: flex-end;
+}
+
+.chat-member-2 {
+  align-self: flex-start;
+}
+
+.message__form {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+
+  &-input {
+    flex: 1 1 auto;
+    border: 1px solid;
+    padding: 5px;
+    font-size: inherit;
+  }
+}
+
+.dialog {
+  margin: auto;
+  min-width: 273px;
+  min-height: 319px;
+  border: none;
+  inset: 0;
+  position: fixed;
+}
+
+.dialog::backdrop {
+  background-color: rgb(0 0 0 / 0.6);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.dialog__wrapper {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  &-button {
+    border: none;
+    appearance: none;
+  }
+}

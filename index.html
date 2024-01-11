@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="./src/style.scss" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <main id="app">
+      <div class="controls__wrapper">
+        <button
+          class="controls__wrapper-settings"
+          onclick="window['modal'].showModal()"
+        >
+          Настройки
+        </button>
+        <button class="controls__wrapper-quit">Выйти</button>
+      </div>
+      <ul class="message__wrapper">
+        <li class="message__wrapper-item chat-member-1">
+          <p class="message__wrapper-item-text">Я: Добрый день!</p>
+          <span class="message__wrapper-item-timestamp">18:45</span>
+        </li>
+        <li class="message__wrapper-item chat-member-2">
+          <p class="message__wrapper-item-text">Собеседник: Добрый день!</p>
+          <span class="message__wrapper-item-timestamp">18:45</span>
+        </li>
+        <li class="message__wrapper-item chat-member-2">
+          <p class="message__wrapper-item-text">
+            Собеседник: А это второе и, кажется, оно очень длинное, чтобы
+            поместиться на одной строке
+          </p>
+          <span class="message__wrapper-item-timestamp">18:45</span>
+        </li>
+        <li class="message__wrapper-item chat-member-1">
+          <p class="message__wrapper-item-text">Я: Добрый день!</p>
+          <span class="message__wrapper-item-timestamp">18:45</span>
+        </li>
+      </ul>
+      <form class="message__form">
+        <input
+          class="message__form-input"
+          type="text"
+          placeholder="сообщение..."
+        />
+        <button type="submit">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-arrow-right"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </button>
+      </form>
+    </main>
+    <dialog class="dialog" id="modal">
+      <div class="dialog__wrapper">
+        <form class="controls__wrapper" method="dialog">
+          <p>Настройки</p>
+          <button type="submit" class="dialog__wrapper-button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-x"
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </button>
+        </form>
+        <p>Имя в чате</p>
+        <form class="message__form" method="dialog">
+          <input class="message__form-input" type="text" placeholder="Стив" />
+          <button type="submit">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-arrow-right"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </button>
+        </form>
+      </div>
+    </dialog>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      lucide.createIcons();
+    </script>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
