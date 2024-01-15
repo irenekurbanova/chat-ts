@@ -32,12 +32,12 @@ button {
 }
 
 #app {
-  padding: 5px;
+  padding: 8px;
   max-width: 320px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
 }
 
 .controls__wrapper {
@@ -46,17 +46,18 @@ button {
 }
 
 .message__wrapper {
-  min-height: 400px;
-  padding: 5px;
+  min-width: 304px;
+  min-height: 437px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
-  gap: 5px;
+  gap: 8px;
   border: 1px solid;
 
   &-item {
-    padding: 5px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
     background-color: #e5e5e5;
@@ -80,12 +81,12 @@ button {
 .message__form {
   display: flex;
   justify-content: space-between;
-  gap: 5px;
+  gap: 8px;
 
   &-textarea {
     flex-grow: 1;
     border: 1px solid;
-    padding: 5px;
+    padding: 8px;
     font-size: inherit;
     outline: none;
     font-family: inherit;
@@ -112,7 +113,7 @@ button {
   padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
 
   &-button {
     border: none;

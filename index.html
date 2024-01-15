@@ -18,8 +18,10 @@
         </button>
         <button class="controls__wrapper-quit">Выйти</button>
       </div>
-      <ul class="message__wrapper">
-        <li class="message__wrapper-item chat-member-1">
+      <ul class="message__wrapper"></ul>
+      <template id="template">
+        <li></li>
+        <!-- <li class="message__wrapper-item chat-member-1">
           <p class="message__wrapper-item-text">Я: Добрый день!</p>
           <span class="message__wrapper-item-timestamp">18:45</span>
         </li>
@@ -37,8 +39,8 @@
         <li class="message__wrapper-item chat-member-1">
           <p class="message__wrapper-item-text">Я: Добрый день!</p>
           <span class="message__wrapper-item-timestamp">18:45</span>
-        </li>
-      </ul>
+        </li> -->
+      </template>
       <form class="message__form" id="message__form">
         <textarea
           class="message__form-textarea"
@@ -74,6 +76,6 @@
         </form>
       </div>
     </dialog>
-    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>
