@@ -46,20 +46,8 @@
           placeholder="сообщение..."
         />
         <button type="submit">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-arrow-right"
-          >
-            <path d="M5 12h14" />
-            <path d="m12 5 7 7-7 7" />
+          <svg viewBox="0 0 24 24" width="16" height="16">
+            <use href="sprite.svg#arrow"></use>
           </svg>
         </button>
       </form>
@@ -69,20 +57,8 @@
         <form class="controls__wrapper" method="dialog">
           <p>Настройки</p>
           <button type="submit" class="dialog__wrapper-button">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-x"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
+            <svg viewBox="0 0 24 24" width="16" height="16">
+              <use href="sprite.svg#close"></use>
             </svg>
           </button>
         </form>
@@ -90,29 +66,13 @@
         <form class="message__form" method="dialog">
           <input class="message__form-input" type="text" placeholder="Стив" />
           <button type="submit">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-arrow-right"
-            >
-              <path d="M5 12h14" />
-              <path d="m12 5 7 7-7 7" />
+            <svg viewBox="0 0 24 24" width="16" height="16">
+              <use href="sprite.svg#arrow"></use>
             </svg>
           </button>
         </form>
       </div>
     </dialog>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-      lucide.createIcons();
-    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
