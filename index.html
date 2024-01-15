@@ -39,12 +39,13 @@
           <span class="message__wrapper-item-timestamp">18:45</span>
         </li>
       </ul>
-      <form class="message__form">
-        <input
-          class="message__form-input"
-          type="text"
+      <form class="message__form" id="message__form">
+        <textarea
+          class="message__form-textarea"
+          form="message__form"
           placeholder="сообщение..."
-        />
+          required
+        ></textarea>
         <button type="submit">
           <svg viewBox="0 0 24 24" width="16" height="16">
             <use href="sprite.svg#arrow"></use>

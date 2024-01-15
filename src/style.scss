@@ -82,11 +82,14 @@ button {
   justify-content: space-between;
   gap: 5px;
 
-  &-input {
-    flex: 1 1 auto;
+  &-textarea {
+    flex-grow: 1;
     border: 1px solid;
     padding: 5px;
     font-size: inherit;
+    outline: none;
+    font-family: inherit;
+    resize: vertical;
   }
 }
 
