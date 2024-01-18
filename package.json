@@ -12,5 +12,8 @@
     "sass": "^1.69.7",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
+  },
+  "dependencies": {
+    "vite-plugin-ts": "^1.3.2-1"
   }
 }
