@@ -1,8 +1,20 @@
-import { SEND_MESSAGE_FORM, TEXTAREA } from "./DOM-elements";
-import { createTemplateContent } from "./helpers";
+import {
+  SEND_MESSAGE_FORM,
+  TEXTAREA,
+  DIALOG_AUTHENTICATION,
+  AUTHENTICATION_FORM_ERROR,
+  EMAIL_INPUT,
+  GET_CODE,
+} from "./DOM-elements";
+import { createTemplateContent, isEmailValid, showError } from "./helpers";
 import { DUMMY_ARRAY_OF_MESSAGES } from "./mock-data";
+import { fetchData } from "./API";
 
-const messageSubmitHandler = (event: any) => {
+document.addEventListener("DOMContentLoaded", () => {
+  DIALOG_AUTHENTICATION.showModal();
+});
+
+function messageSubmitHandler(event: any) {
   if (event.key === "Enter" && !event.shiftKey) {
     createTemplateContent({
       name: "",
@@ -11,6 +23,7 @@ const messageSubmitHandler = (event: any) => {
     });
     TEXTAREA.value = "";
   }
+
   if (event.type === "submit") {
     event.preventDefault();
     createTemplateContent({
@@ -20,7 +33,7 @@ const messageSubmitHandler = (event: any) => {
     });
     TEXTAREA.value = "";
   }
-};
+}
 
 ["keydown", "submit"].forEach((event) =>
   SEND_MESSAGE_FORM.addEventListener(event, messageSubmitHandler)
@@ -35,3 +48,16 @@ const initialData = (
 };
 
 initialData(DUMMY_ARRAY_OF_MESSAGES);
+
+function getCodeHandler(event: Event) {
+  event.preventDefault();
+  if (isEmailValid(EMAIL_INPUT.value)) {
+    fetchData(import.meta.env.VITE_API_URL, EMAIL_INPUT.value);
+    DIALOG_AUTHENTICATION.close();
+  } else {
+    EMAIL_INPUT.value = "";
+    showError("Некорректный email", AUTHENTICATION_FORM_ERROR);
+  }
+}
+
+GET_CODE.addEventListener("click", getCodeHandler);

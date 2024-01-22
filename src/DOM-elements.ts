@@ -10,3 +10,18 @@ export const TEXTAREA = document.querySelector(
 export const TEMPLATE = document.querySelector(
   "#template"
 ) as HTMLTemplateElement;
+export const DIALOG_AUTHENTICATION = document.getElementById(
+  "authentication"
+) as HTMLDialogElement;
+export const AUTHENTICATION_FORM_ERROR = document.querySelector(
+  ".authentication__form-error"
+) as HTMLParagraphElement;
+export const EMAIL_INPUT = document.querySelector(
+  ".authentication__form-input"
+) as HTMLInputElement;
+export const GET_CODE = document.getElementById(
+  "get-code"
+) as HTMLButtonElement;
+export const ENTER_CODE = document.getElementById(
+  "enter-code"
+) as HTMLButtonElement;

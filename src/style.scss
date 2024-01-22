@@ -108,6 +108,31 @@ button {
   }
 }
 
+.authentication__form,
+.confirmation__form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &-input {
+    flex-grow: 1;
+    border: 1px solid;
+    padding: 8px;
+    font-size: inherit;
+    outline: none;
+    font-family: inherit;
+  }
+
+  &-buttons {
+    display: flex;
+    gap: 8px;
+
+    & button {
+      flex: 1 1 100%;
+    }
+  }
+}
+
 .dialog {
   margin: auto;
   min-width: 273px;
@@ -127,6 +152,7 @@ button {
   padding: 10px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 8px;
 
   &-button {

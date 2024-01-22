@@ -3,6 +3,20 @@ export const isMessageValid = (message: string) => {
   return message.trim().length > 0;
 };
 
+export const isEmailValid = (email: string) => {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
+
+export const showError = (message: string, parent: HTMLElement) => {
+  parent.textContent = message;
+  parent.style.color = "red";
+  setTimeout(() => {
+    parent.textContent = "";
+  }, 3000);
+};
+
 export const createTemplateContent = (data: {
   name: string;
   message: string;
