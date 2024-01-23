@@ -1,9 +1,9 @@
-const CHAT_OWNER = "Я";
-const CHAT_MEMBER = "Собеседник";
+let CHAT_OWNER = "Я";
+let CHAT_MEMBER = "Собеседник";
 
-export const DUMMY_ARRAY_OF_MESSAGES: {
-  name: string;
+export let DUMMY_ARRAY_OF_MESSAGES: {
   message: string;
+  name: string;
   timeStamp: string;
 }[] = [
   {

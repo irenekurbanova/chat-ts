@@ -21,14 +21,13 @@ export const createTemplateContent = (data: {
   name: string;
   message: string;
   timeStamp: string;
+  chatowner?: string;
 }) => {
-  if (!isMessageValid(data.message)) return;
-
   const MESSAGE_TEMPLATE = TEMPLATE.content.cloneNode(true) as HTMLElement;
 
   const MESSAGE_ITEM = MESSAGE_TEMPLATE.querySelector("li") as HTMLElement;
 
-  const CHAT_MEMBER = data.name === "Я" ? "chat-member-1" : "chat-member-2";
+  const CHAT_MEMBER = data.chatowner ? "chat-member-1" : "chat-member-2";
 
   MESSAGE_ITEM.classList.add("message__wrapper-item", CHAT_MEMBER);
 

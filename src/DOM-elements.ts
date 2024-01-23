@@ -13,10 +13,22 @@ export const TEMPLATE = document.querySelector(
 export const DIALOG_AUTHENTICATION = document.getElementById(
   "authentication"
 ) as HTMLDialogElement;
+export const DIALOG_SETTINGS = document.getElementById(
+  "settings"
+) as HTMLDialogElement;
+export const DIALOG_CONFIRMATION = document.getElementById(
+  "confirmation"
+) as HTMLDialogElement;
+export const CONFIRMATION_BUTTON = document.querySelector(
+  ".confirmation__form-button"
+) as HTMLButtonElement;
+export const CONFIRMATION_INPUT = document.querySelector(
+  ".confirmation__form-input"
+) as HTMLInputElement;
 export const AUTHENTICATION_FORM_ERROR = document.querySelector(
   ".authentication__form-error"
 ) as HTMLParagraphElement;
-export const EMAIL_INPUT = document.querySelector(
+export const AUTHENTICATION_INPUT = document.querySelector(
   ".authentication__form-input"
 ) as HTMLInputElement;
 export const GET_CODE = document.getElementById(

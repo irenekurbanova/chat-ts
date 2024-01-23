@@ -1,5 +1,4 @@
 export const fetchData = async (url: string, params: string) => {
-  console.log(url, params);
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -14,6 +13,75 @@ export const fetchData = async (url: string, params: string) => {
       throw new Error(`Could not fetch ${url}, status: ${response.status}`);
     }
     const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const sendData = async (
+  url: string,
+  token: string | undefined,
+  name: string
+) => {
+  try {
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name: name,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${response.status}`);
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getUserData = async (url: string, token: string | undefined) => {
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getMessagesData = async (
+  url: string,
+  token: string | undefined
+) => {
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${response.status}`);
+    }
+    const data = await response.json();
+
     return data;
   } catch (error) {
     console.log(error);
