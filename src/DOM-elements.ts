@@ -19,6 +19,12 @@ export const DIALOG_SETTINGS = document.getElementById(
 export const DIALOG_CONFIRMATION = document.getElementById(
   "confirmation"
 ) as HTMLDialogElement;
+export const DIALOG_ERROR = document.getElementById(
+  "error"
+) as HTMLDialogElement;
+export const ERROR_MESSAGE = document.querySelector(
+  ".dialog__wrapper-error"
+) as HTMLParagraphElement;
 export const CONFIRMATION_BUTTON = document.querySelector(
   ".confirmation__form-button"
 ) as HTMLButtonElement;

@@ -81,8 +81,8 @@ export const getMessagesData = async (
       throw new Error(`Could not fetch ${url}, status: ${response.status}`);
     }
     const data = await response.json();
-
-    return data;
+    let { messages } = data;
+    return messages;
   } catch (error) {
     console.log(error);
   }

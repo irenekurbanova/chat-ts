@@ -137,9 +137,15 @@ button {
   margin: auto;
   min-width: 273px;
   min-height: 319px;
+  padding: 10px;
   border: none;
   inset: 0;
-  position: fixed;
+  position: relative;
+}
+
+.dialog + #error {
+  min-width: 273px;
+  min-height: 100px;
 }
 
 .dialog::backdrop {
@@ -149,7 +155,6 @@ button {
 }
 
 .dialog__wrapper {
-  padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -158,5 +163,14 @@ button {
   &-button {
     border: none;
     appearance: none;
+  }
+
+  &-error {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    color: red;
+    text-align: center;
   }
 }

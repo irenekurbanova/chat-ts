@@ -17,6 +17,18 @@ export const showError = (message: string, parent: HTMLElement) => {
   }, 3000);
 };
 
+export const renderData = (
+  array: {
+    name: string;
+    message: string;
+    timeStamp: string;
+  }[]
+) => {
+  array.map((item) => {
+    createTemplateContent(item);
+  });
+};
+
 export const createTemplateContent = (data: {
   name: string;
   message: string;
