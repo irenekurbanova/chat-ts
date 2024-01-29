@@ -1,8 +1,8 @@
-export const fetchData = async (url: string, params: string) => {
+export const getToken = async (url: string, email?: string) => {
   try {
     const response = await fetch(url, {
       method: "POST",
-      body: JSON.stringify({ email: `${params}` }),
+      body: JSON.stringify({ email: `${email}` }),
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -12,41 +12,34 @@ export const fetchData = async (url: string, params: string) => {
     if (!response.ok) {
       throw new Error(`Could not fetch ${url}, status: ${response.status}`);
     }
-    const data = await response.json();
-    return data;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const sendData = async (
-  url: string,
-  token: string | undefined,
-  name: string
-) => {
+export const sendUserData = async (url: string, token?: string, name?: string) => {
   try {
     const response = await fetch(url, {
       method: "PATCH",
+      body: JSON.stringify({
+        name: name,
+      }),
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        name: name,
-      }),
     });
     if (!response.ok) {
       throw new Error(`Could not fetch ${url}, status: ${response.status}`);
     }
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const getUserData = async (url: string, token: string | undefined) => {
+export const getUserData = async (url: string, token?: string) => {
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -65,10 +58,7 @@ export const getUserData = async (url: string, token: string | undefined) => {
   }
 };
 
-export const getMessagesData = async (
-  url: string,
-  token: string | undefined
-) => {
+export const getMessagesHistory = async (url: string, token?: string) => {
   try {
     const response = await fetch(url, {
       method: "GET",

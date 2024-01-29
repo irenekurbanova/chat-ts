@@ -1,12 +1,22 @@
-import { MESSAGES_CONTAINER, TEMPLATE } from "./DOM-elements";
+import { DOM_ELEMENTS } from "./DOM-elements";
+
 export const isMessageValid = (message: string) => {
   return message.trim().length > 0;
 };
 
-export const isEmailValid = (email: string) => {
+export const isEmailValid = (email?: string) => {
+  if (!email) return false;
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
+};
+
+export const isInputValid = (input: string) => {
+  return input.trim().length > 0;
+};
+
+export const clearInput = (input: HTMLTextAreaElement | HTMLInputElement) => {
+  input.value = "";
 };
 
 export const showError = (message: string, parent: HTMLElement) => {
@@ -17,6 +27,14 @@ export const showError = (message: string, parent: HTMLElement) => {
   }, 3000);
 };
 
+export const formatDate = (date: string) => {
+  const dateObj = new Date(date);
+  const time = `${dateObj.getHours() < 10 ? dateObj.getHours().toString().padStart(2, "0") : dateObj.getHours()}:${
+    dateObj.getMinutes() < 10 ? dateObj.getMinutes().toString().padStart(2, "0") : dateObj.getMinutes()
+  }`;
+  return time;
+};
+
 export const renderData = (
   array: {
     name: string;
@@ -24,32 +42,23 @@ export const renderData = (
     timeStamp: string;
   }[]
 ) => {
-  array.map((item) => {
+  const banchOfMessages = array.splice(-19);
+  banchOfMessages.reverse().map((item) => {
     createTemplateContent(item);
   });
 };
 
-export const createTemplateContent = (data: {
-  name: string;
-  message: string;
-  timeStamp: string;
-  chatowner?: string;
-}) => {
-  const MESSAGE_TEMPLATE = TEMPLATE.content.cloneNode(true) as HTMLElement;
-
-  const MESSAGE_ITEM = MESSAGE_TEMPLATE.querySelector("li") as HTMLElement;
-
-  const CHAT_MEMBER = data.chatowner ? "chat-member-1" : "chat-member-2";
-
-  MESSAGE_ITEM.classList.add("message__wrapper-item", CHAT_MEMBER);
-
+export const createTemplateContent = (
+  data: { name: string; message?: string; timeStamp: string },
+  insertPosition?: InsertPosition
+) => {
+  const markupInsertPosition = (insertPosition && insertPosition) || "afterbegin";
+  const CHAT_MEMBER = data.name === "Irene" ? "chat-member-1" : "chat-member-2";
   const markup = `
-   <p class="message__wrapper-item-text">${data.name}: ${data.message}</p>
-   <span class="message__wrapper-item-timestamp">${
-     data.timeStamp ?? "18:45"
-   }</span>
-  `;
+  <li class="message__wrapper-item ${CHAT_MEMBER}">
+  <p class="message__wrapper-item-text">${data.name}: ${data.message}</p>
+  <span class="message__wrapper-item-timestamp">${data.timeStamp ?? "18:45"}</span>
+  </li>`;
 
-  MESSAGE_ITEM.insertAdjacentHTML("beforeend", markup);
-  MESSAGES_CONTAINER.append(MESSAGE_TEMPLATE);
+  DOM_ELEMENTS.MESSAGES_LIST?.insertAdjacentHTML(markupInsertPosition, markup);
 };

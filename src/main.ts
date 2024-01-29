@@ -1,102 +1,117 @@
-import {
-  SEND_MESSAGE_FORM,
-  TEXTAREA,
-  DIALOG_AUTHENTICATION,
-  DIALOG_CONFIRMATION,
-  CONFIRMATION_BUTTON,
-  CONFIRMATION_INPUT,
-  AUTHENTICATION_INPUT,
-  GET_CODE,
-  ENTER_CODE,
-} from "./DOM-elements";
-import { createTemplateContent, isEmailValid, renderData } from "./helpers";
+import { DOM_ELEMENTS } from "./DOM-elements";
+import { isEmailValid, isInputValid, renderData, clearInput, formatDate } from "./helpers";
 import { showError } from "./errorHandlers";
-import { DUMMY_ARRAY_OF_MESSAGES } from "./mock-data";
-import { fetchData, sendData, getMessagesData } from "./API";
+import { ARRAY_OF_MESSAGES } from "./messages-data";
+import { getToken, sendUserData, getMessagesHistory } from "./API";
+import { webSocket, connectToWebSocket } from "./webSocket";
 import { getCookie, setCookie } from "typescript-cookie";
-
-let CHAT_OWNER = "" || getCookie("name");
 
 document.addEventListener("DOMContentLoaded", async () => {
   if (getCookie("token") && getCookie("name")) {
-    const messages = await getMessagesData(
-      import.meta.env.VITE_MESSAGES_API_URL,
-      getCookie("token")
-    );
+    connectToWebSocket(getCookie("token"));
 
-    messages.map(
-      (item: { text: string; user: { name: string }; createdAt: string }) => {
-        DUMMY_ARRAY_OF_MESSAGES.push({
-          message: item.text,
-          name: item.user.name,
-          timeStamp: item.createdAt,
-        });
-      }
-    );
+    const messages = await getMessagesHistory(import.meta.env.VITE_MESSAGES_API_URL, getCookie("token"));
 
-    renderData(DUMMY_ARRAY_OF_MESSAGES);
-  } else DIALOG_AUTHENTICATION.showModal();
+    messages.reverse().map((item: { text: string; user: { name: string }; createdAt: string }) => {
+      ARRAY_OF_MESSAGES.push({
+        message: item.text,
+        name: item.user.name,
+        timeStamp: formatDate(item.createdAt),
+      });
+    });
+
+    renderData(ARRAY_OF_MESSAGES);
+    scrollToEnd();
+  } else DOM_ELEMENTS.DIALOG_AUTHENTICATION?.showModal();
 });
 
-function messageSubmitHandler(event: any) {
-  if ((event.key === "Enter" && !event.shiftKey) || event.type === "submit") {
+function messageSubmitHandler(event: Event | KeyboardEvent) {
+  if (("key" in event && event.key === "Enter" && !event.shiftKey) || event.type === "submit") {
     event.preventDefault();
-    createTemplateContent({
-      name: CHAT_OWNER ?? "",
-      message: TEXTAREA.value,
-      timeStamp: "",
-      chatowner: CHAT_OWNER,
-    });
-    TEXTAREA.value = "";
+
+    webSocket.send(JSON.stringify({ text: DOM_ELEMENTS.TEXTAREA?.value }));
+
+    DOM_ELEMENTS.TEXTAREA && clearInput(DOM_ELEMENTS.TEXTAREA);
+    scrollToEnd();
   }
 }
 
 function getCodeHandler(event: Event) {
   event.preventDefault();
-  if (isEmailValid(AUTHENTICATION_INPUT.value)) {
-    fetchData(import.meta.env.VITE_API_URL, AUTHENTICATION_INPUT.value);
-    DIALOG_AUTHENTICATION.close();
+
+  if (isEmailValid(DOM_ELEMENTS.AUTHENTICATION_INPUT?.value)) {
+    getToken(import.meta.env.VITE_API_URL, DOM_ELEMENTS.AUTHENTICATION_INPUT?.value);
+    DOM_ELEMENTS.DIALOG_AUTHENTICATION?.close();
   } else {
-    AUTHENTICATION_INPUT.value = "";
+    DOM_ELEMENTS.AUTHENTICATION_INPUT && clearInput(DOM_ELEMENTS.AUTHENTICATION_INPUT);
     showError("Некорректный email");
   }
 }
 
 function enterCodeHandler(event: Event) {
   event.preventDefault();
-  setCookie("token", `${AUTHENTICATION_INPUT.value}`);
-  DIALOG_AUTHENTICATION.close();
-  DIALOG_CONFIRMATION.showModal();
+
+  DOM_ELEMENTS.DIALOG_AUTHENTICATION?.close();
+  DOM_ELEMENTS.DIALOG_CONFIRMATION?.showModal();
 }
 
-async function nameConfirmationHandler(event: Event) {
+async function codeConfirmationHandler(event: Event) {
   event.preventDefault();
+
+  if (DOM_ELEMENTS.CONFIRMATION_INPUT && !isInputValid(DOM_ELEMENTS.CONFIRMATION_INPUT.value)) {
+    showError("Некорректный код");
+    return;
+  }
+
+  setCookie("token", `${DOM_ELEMENTS.CONFIRMATION_INPUT?.value}`);
   const token = getCookie("token");
-  setCookie("name", CONFIRMATION_INPUT.value);
-  CHAT_OWNER = CONFIRMATION_INPUT.value;
-  sendData(import.meta.env.VITE_API_URL, token, CONFIRMATION_INPUT.value);
-  const messages = await getMessagesData(
-    import.meta.env.VITE_MESSAGES_API_URL,
-    getCookie("token")
-  );
+  const messages = await getMessagesHistory(import.meta.env.VITE_MESSAGES_API_URL, token);
 
-  messages.map(
-    (item: { text: string; user: { name: string }; createdAt: string }) => {
-      DUMMY_ARRAY_OF_MESSAGES.push({
-        message: item.text,
-        name: item.user.name,
-        timeStamp: item.createdAt,
-      });
-    }
-  );
+  messages.reverse().map((item: { text: string; user: { name: string }; createdAt: string }) => {
+    ARRAY_OF_MESSAGES.push({
+      message: item.text,
+      name: item.user.name,
+      timeStamp: formatDate(item.createdAt),
+    });
+  });
 
-  renderData(DUMMY_ARRAY_OF_MESSAGES);
-  DIALOG_CONFIRMATION.close();
+  renderData(ARRAY_OF_MESSAGES);
+  scrollToEnd();
+  connectToWebSocket(token);
+  DOM_ELEMENTS.DIALOG_CONFIRMATION?.close();
+  DOM_ELEMENTS.DIALOG_SETTINGS?.showModal();
 }
 
-["keydown", "submit"].forEach((event) =>
-  SEND_MESSAGE_FORM.addEventListener(event, messageSubmitHandler)
-);
-GET_CODE.addEventListener("click", getCodeHandler);
-ENTER_CODE.addEventListener("click", enterCodeHandler);
-CONFIRMATION_BUTTON.addEventListener("click", nameConfirmationHandler);
+async function nameConfirmationHandler() {
+  if (DOM_ELEMENTS.SETTINGS_INPUT && isInputValid(DOM_ELEMENTS.SETTINGS_INPUT.value)) {
+    setCookie("name", DOM_ELEMENTS.SETTINGS_INPUT?.value);
+
+    const token = getCookie("token");
+    await sendUserData(import.meta.env.VITE_API_URL, token, DOM_ELEMENTS.SETTINGS_INPUT?.value);
+    DOM_ELEMENTS.DIALOG_SETTINGS?.close();
+  } else showError("Некорректное имя");
+}
+
+function scrollToEnd() {
+  if (DOM_ELEMENTS.MESSAGES_CONTAINER) {
+    DOM_ELEMENTS.MESSAGES_CONTAINER.scrollTop = DOM_ELEMENTS.MESSAGES_CONTAINER.scrollHeight;
+  }
+}
+
+function lazyMessageLoading() {
+  if (DOM_ELEMENTS.MESSAGES_CONTAINER) {
+    let old_height = DOM_ELEMENTS.MESSAGES_CONTAINER.scrollHeight;
+    if (DOM_ELEMENTS.MESSAGES_CONTAINER.scrollTop === 0) {
+      renderData(ARRAY_OF_MESSAGES);
+      let new_height = DOM_ELEMENTS.MESSAGES_CONTAINER.scrollHeight;
+      DOM_ELEMENTS.MESSAGES_CONTAINER.scrollTop = new_height - old_height;
+    }
+  }
+}
+
+["keydown", "submit"].forEach((event) => DOM_ELEMENTS.SEND_MESSAGE_FORM?.addEventListener(event, messageSubmitHandler));
+DOM_ELEMENTS.GET_CODE?.addEventListener("click", getCodeHandler);
+DOM_ELEMENTS.ENTER_CODE?.addEventListener("click", enterCodeHandler);
+DOM_ELEMENTS.CONFIRMATION_BUTTON?.addEventListener("click", codeConfirmationHandler);
+DOM_ELEMENTS.SETTINGS_BUTTON?.addEventListener("click", nameConfirmationHandler);
+DOM_ELEMENTS.MESSAGES_CONTAINER?.addEventListener("scroll", lazyMessageLoading);

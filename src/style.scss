@@ -91,7 +91,8 @@ button {
   align-self: flex-start;
 }
 
-.message__form {
+.message__form,
+.settings__form {
   display: flex;
   justify-content: space-between;
   gap: 8px;
@@ -125,11 +126,16 @@ button {
 
   &-buttons {
     display: flex;
+    justify-content: space-between;
     gap: 8px;
 
     & button {
       flex: 1 1 100%;
     }
+  }
+
+  &-button {
+    align-self: flex-start;
   }
 }
 

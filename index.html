@@ -10,27 +10,14 @@
   <body>
     <main id="app">
       <div class="controls__wrapper">
-        <button
-          class="controls__wrapper-settings"
-          onclick="window['settings'].showModal()"
-        >
-          Настройки
-        </button>
+        <button class="controls__wrapper-settings" onclick="window['settings'].showModal()">Настройки</button>
         <button class="controls__wrapper-quit">Выйти</button>
       </div>
       <section class="message__section">
         <ul class="message__wrapper"></ul>
       </section>
-      <template id="template">
-        <li></li>
-      </template>
       <form class="message__form" id="message__form">
-        <textarea
-          class="message__form-textarea"
-          form="message__form"
-          placeholder="сообщение..."
-          required
-        ></textarea>
+        <textarea class="message__form-textarea" form="message__form" placeholder="сообщение..." required></textarea>
         <button type="submit">
           <svg viewBox="0 0 24 24" width="16" height="16">
             <use href="sprite.svg#arrow"></use>
@@ -49,9 +36,9 @@
           </button>
         </form>
         <p>Имя в чате</p>
-        <form class="message__form" method="dialog">
-          <input class="message__form-input" type="text" placeholder="Стив" />
-          <button type="submit">
+        <form class="settings__form" method="dialog">
+          <input class="settings__form-input" type="text" name="username" placeholder="Стив" required />
+          <button type="submit" class="settings__form-button">
             <svg viewBox="0 0 24 24" width="16" height="16">
               <use href="sprite.svg#arrow"></use>
             </svg>
@@ -71,11 +58,10 @@
         </form>
         <form class="authentication__form" method="dialog">
           <label>Почта</label>
-          <input class="authentication__form-input" type="email" />
-          <p class="authentication__form-error"></p>
+          <input class="authentication__form-input" name="email" type="email" required />
           <div class="authentication__form-buttons">
             <button type="submit" id="get-code">Получить код</button>
-            <button type="submit" id="enter-code">Ввести код</button>
+            <button type="button" id="enter-code">Ввести код</button>
           </div>
         </form>
       </div>
@@ -91,8 +77,8 @@
           </button>
         </form>
         <form class="confirmation__form" method="dialog">
-          <label>Имя в чате</label>
-          <input class="confirmation__form-input" type="text" />
+          <label>Код</label>
+          <input class="confirmation__form-input" type="text" name="token" required />
           <button type="submit" class="confirmation__form-button">Войти</button>
         </form>
       </div>
