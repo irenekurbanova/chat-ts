@@ -1,3 +1,6 @@
+import { ARRAY_OF_MESSAGES } from "./messages-data";
+import { formatDate } from "./helpers";
+
 export const getToken = async (url: string, email?: string) => {
   try {
     const response = await fetch(url, {
@@ -52,6 +55,7 @@ export const getUserData = async (url: string, token?: string) => {
       throw new Error(`Could not fetch ${url}, status: ${response.status}`);
     }
     const data = await response.json();
+
     return data;
   } catch (error) {
     console.log(error);
@@ -72,6 +76,16 @@ export const getMessagesHistory = async (url: string, token?: string) => {
     }
     const data = await response.json();
     let { messages } = data;
+
+    messages.reverse().map((item: { text: string; user: { name: string; email: string }; createdAt: string }) => {
+      ARRAY_OF_MESSAGES.push({
+        message: item.text,
+        name: item.user.name,
+        email: item.user.email,
+        timeStamp: formatDate(item.createdAt),
+      });
+    });
+
     return messages;
   } catch (error) {
     console.log(error);

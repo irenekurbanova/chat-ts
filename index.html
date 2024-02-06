@@ -9,12 +9,18 @@
   </head>
   <body>
     <main id="app">
+      <emoji-picker class="light"></emoji-picker>
       <div class="controls__wrapper">
         <button class="controls__wrapper-settings" onclick="window['settings'].showModal()">Настройки</button>
         <button class="controls__wrapper-quit">Выйти</button>
       </div>
       <section class="message__section">
-        <ul class="message__wrapper"></ul>
+        <div class="message__wrapper">
+          <ul class="message__wrapper-list"></ul>
+        </div>
+        <button class="scroll-down-button">
+          <svg viewBox="0 0 24 24" width="32" height="32"><use href="sprite.svg#chevron-down"></use></svg>
+        </button>
       </section>
       <form class="message__form" id="message__form">
         <textarea class="message__form-textarea" form="message__form" placeholder="сообщение..." required></textarea>
@@ -37,7 +43,7 @@
         </form>
         <p>Имя в чате</p>
         <form class="settings__form" method="dialog">
-          <input class="settings__form-input" type="text" name="username" placeholder="Стив" required />
+          <input class="settings__form-input" type="text" name="username" placeholder="Стив" />
           <button type="submit" class="settings__form-button">
             <svg viewBox="0 0 24 24" width="16" height="16">
               <use href="sprite.svg#arrow"></use>

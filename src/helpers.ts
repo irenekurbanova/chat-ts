@@ -1,5 +1,8 @@
 import { DOM_ELEMENTS } from "./DOM-elements";
 
+const initialScrollTop = 915;
+const fullContentScrollTop = 20664;
+
 export const isMessageValid = (message: string) => {
   return message.trim().length > 0;
 };
@@ -16,7 +19,8 @@ export const isInputValid = (input: string) => {
 };
 
 export const clearInput = (input: HTMLTextAreaElement | HTMLInputElement) => {
-  input.value = "";
+  const parent = input.parentElement as HTMLFormElement;
+  parent.reset();
 };
 
 export const showError = (message: string, parent: HTMLElement) => {
@@ -38,6 +42,7 @@ export const formatDate = (date: string) => {
 export const renderData = (
   array: {
     name: string;
+    email: string;
     message: string;
     timeStamp: string;
   }[]
@@ -49,16 +54,41 @@ export const renderData = (
 };
 
 export const createTemplateContent = (
-  data: { name: string; message?: string; timeStamp: string },
+  data: { name: string; email: string; message?: string; timeStamp: string },
   insertPosition?: InsertPosition
 ) => {
   const markupInsertPosition = (insertPosition && insertPosition) || "afterbegin";
-  const CHAT_MEMBER = data.name === "Irene" ? "chat-member-1" : "chat-member-2";
+  const CHAT_MEMBER = data.email === "kirina2504@gmail.com" ? "chat-member-1" : "chat-member-2";
   const markup = `
-  <li class="message__wrapper-item ${CHAT_MEMBER}">
-  <p class="message__wrapper-item-text">${data.name}: ${data.message}</p>
-  <span class="message__wrapper-item-timestamp">${data.timeStamp ?? "18:45"}</span>
+  <li class="message__wrapper-list-item ${CHAT_MEMBER}">
+  <p class="message__wrapper-list-item-text">${data.name}: ${data.message}</p>
+  <span class="message__wrapper-list-item-timestamp">${data.timeStamp ?? "18:45"}</span>
   </li>`;
 
   DOM_ELEMENTS.MESSAGES_LIST?.insertAdjacentHTML(markupInsertPosition, markup);
 };
+
+export const createHistoryLoadedMessage = () => {
+  const markup = `
+  <li class="message__wrapper-list-history-loaded">
+   <p>Message history loaded</p>  
+  </li>
+  `;
+
+  DOM_ELEMENTS.MESSAGES_LIST?.insertAdjacentHTML("afterbegin", markup);
+};
+
+export function showScrollButton() {
+  let currentScrollTop = DOM_ELEMENTS.MESSAGES_CONTAINER?.scrollTop;
+
+  if (currentScrollTop === initialScrollTop || currentScrollTop === fullContentScrollTop) {
+    DOM_ELEMENTS.BUTTON.SCROLL?.classList.add("hide");
+  } else DOM_ELEMENTS.BUTTON.SCROLL?.classList.remove("hide");
+}
+
+export function scrollToEnd() {
+  if (DOM_ELEMENTS.MESSAGES_CONTAINER) {
+    DOM_ELEMENTS.MESSAGES_CONTAINER.scrollTop = DOM_ELEMENTS.MESSAGES_CONTAINER.scrollHeight;
+    DOM_ELEMENTS.BUTTON.SCROLL?.classList.toggle("hide");
+  }
+}

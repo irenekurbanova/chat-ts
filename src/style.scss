@@ -34,8 +34,7 @@ button {
 }
 
 #app {
-  padding: 8px;
-  max-width: 320px;
+  max-width: 400px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -48,37 +47,67 @@ button {
 }
 
 .message__section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   height: 430px;
-  min-width: 304px;
-  overflow: hidden;
-  overflow-y: scroll;
+  min-width: 400px;
   border: 1px solid;
 }
 
-.message__wrapper {
-  padding: 8px;
+.scroll-down-button {
+  position: absolute;
+  right: 28px;
+  bottom: 18px;
+  background: transparent;
+  border: 1px solid;
+  padding: 0;
+  place-items: center;
   display: flex;
+}
 
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  gap: 8px;
+.scroll-down-button.hide {
+  display: none;
+}
 
-  &-item {
-    padding: 8px;
+.message__wrapper {
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  // flex: 1;
+  overflow: hidden;
+  overflow-y: scroll;
+
+  &-list {
     display: flex;
     flex-direction: column;
-    background-color: #e5e5e5;
+    justify-content: flex-end;
+    gap: 8px;
 
-    &-text {
-      word-break: break-all;
-      white-space: normal;
+    &-history-loaded {
+      padding: 8px;
+      background-color: #e5e5e5;
+      align-self: stretch;
+      text-align: center;
+      color: red;
     }
 
-    &-timestamp {
-      align-self: flex-end;
-      font-size: 14px;
-      font-weight: 300;
+    &-item {
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      background-color: #e5e5e5;
+
+      &-text {
+        word-break: normal;
+        white-space: normal;
+      }
+
+      &-timestamp {
+        align-self: flex-end;
+        font-size: 14px;
+        font-weight: 300;
+      }
     }
   }
 }
@@ -105,7 +134,7 @@ button {
     font-size: inherit;
     outline: none;
     font-family: inherit;
-    resize: vertical;
+    resize: none;
   }
 }
 

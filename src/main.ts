@@ -1,49 +1,50 @@
 import { DOM_ELEMENTS } from "./DOM-elements";
-import { isEmailValid, isInputValid, renderData, clearInput, formatDate } from "./helpers";
+import {
+  isEmailValid,
+  isInputValid,
+  renderData,
+  clearInput,
+  createHistoryLoadedMessage,
+  scrollToEnd,
+  showScrollButton,
+} from "./helpers";
 import { showError } from "./errorHandlers";
 import { ARRAY_OF_MESSAGES } from "./messages-data";
-import { getToken, sendUserData, getMessagesHistory } from "./API";
+import { getToken, sendUserData, getMessagesHistory, getUserData } from "./API";
 import { webSocket, connectToWebSocket } from "./webSocket";
-import { getCookie, setCookie } from "typescript-cookie";
+import { getCookie, setCookie, removeCookie } from "typescript-cookie";
 
-document.addEventListener("DOMContentLoaded", async () => {
+window.onload = async () => {
   if (getCookie("token") && getCookie("name")) {
     connectToWebSocket(getCookie("token"));
 
-    const messages = await getMessagesHistory(import.meta.env.VITE_MESSAGES_API_URL, getCookie("token"));
-
-    messages.reverse().map((item: { text: string; user: { name: string }; createdAt: string }) => {
-      ARRAY_OF_MESSAGES.push({
-        message: item.text,
-        name: item.user.name,
-        timeStamp: formatDate(item.createdAt),
-      });
-    });
+    await getMessagesHistory(import.meta.env.VITE_MESSAGES_API_URL, getCookie("token"));
 
     renderData(ARRAY_OF_MESSAGES);
     scrollToEnd();
-  } else DOM_ELEMENTS.DIALOG_AUTHENTICATION?.showModal();
-});
+  } else DOM_ELEMENTS.DIALOG.AUTHENTICATION?.showModal();
+};
 
-function messageSubmitHandler(event: Event | KeyboardEvent) {
+async function messageSubmitHandler(event: Event | KeyboardEvent) {
   if (("key" in event && event.key === "Enter" && !event.shiftKey) || event.type === "submit") {
     event.preventDefault();
 
-    webSocket.send(JSON.stringify({ text: DOM_ELEMENTS.TEXTAREA?.value }));
+    await getUserData(import.meta.env.VITE_USER_API_URL, getCookie("token"));
 
-    DOM_ELEMENTS.TEXTAREA && clearInput(DOM_ELEMENTS.TEXTAREA);
-    scrollToEnd();
+    webSocket.send(JSON.stringify({ text: DOM_ELEMENTS.USER_INPUT.MESSAGE?.value }));
+
+    DOM_ELEMENTS.USER_INPUT.MESSAGE && clearInput(DOM_ELEMENTS.USER_INPUT.MESSAGE);
   }
 }
 
 function getCodeHandler(event: Event) {
   event.preventDefault();
 
-  if (isEmailValid(DOM_ELEMENTS.AUTHENTICATION_INPUT?.value)) {
-    getToken(import.meta.env.VITE_API_URL, DOM_ELEMENTS.AUTHENTICATION_INPUT?.value);
-    DOM_ELEMENTS.DIALOG_AUTHENTICATION?.close();
+  if (DOM_ELEMENTS.USER_INPUT.EMAIL && isEmailValid(DOM_ELEMENTS.USER_INPUT.EMAIL?.value)) {
+    getToken(import.meta.env.VITE_API_URL, DOM_ELEMENTS.USER_INPUT.EMAIL?.value);
+    clearInput(DOM_ELEMENTS.USER_INPUT.EMAIL);
+    DOM_ELEMENTS.DIALOG.AUTHENTICATION?.close();
   } else {
-    DOM_ELEMENTS.AUTHENTICATION_INPUT && clearInput(DOM_ELEMENTS.AUTHENTICATION_INPUT);
     showError("Некорректный email");
   }
 }
@@ -51,67 +52,70 @@ function getCodeHandler(event: Event) {
 function enterCodeHandler(event: Event) {
   event.preventDefault();
 
-  DOM_ELEMENTS.DIALOG_AUTHENTICATION?.close();
-  DOM_ELEMENTS.DIALOG_CONFIRMATION?.showModal();
+  DOM_ELEMENTS.DIALOG.AUTHENTICATION?.close();
+  DOM_ELEMENTS.DIALOG.CONFIRMATION?.showModal();
 }
 
 async function codeConfirmationHandler(event: Event) {
   event.preventDefault();
 
-  if (DOM_ELEMENTS.CONFIRMATION_INPUT && !isInputValid(DOM_ELEMENTS.CONFIRMATION_INPUT.value)) {
+  if (DOM_ELEMENTS.USER_INPUT.TOKEN && isInputValid(DOM_ELEMENTS.USER_INPUT.TOKEN.value)) {
+    setCookie("token", `${DOM_ELEMENTS.USER_INPUT.TOKEN?.value}`);
+    const token = getCookie("token");
+    await getMessagesHistory(import.meta.env.VITE_MESSAGES_API_URL, token);
+
+    renderData(ARRAY_OF_MESSAGES);
+    scrollToEnd();
+    connectToWebSocket(token);
+    DOM_ELEMENTS.USER_INPUT.TOKEN && clearInput(DOM_ELEMENTS.USER_INPUT.TOKEN);
+    DOM_ELEMENTS.DIALOG.CONFIRMATION?.close();
+    DOM_ELEMENTS.DIALOG.SETTINGS?.showModal();
+  } else {
     showError("Некорректный код");
     return;
   }
-
-  setCookie("token", `${DOM_ELEMENTS.CONFIRMATION_INPUT?.value}`);
-  const token = getCookie("token");
-  const messages = await getMessagesHistory(import.meta.env.VITE_MESSAGES_API_URL, token);
-
-  messages.reverse().map((item: { text: string; user: { name: string }; createdAt: string }) => {
-    ARRAY_OF_MESSAGES.push({
-      message: item.text,
-      name: item.user.name,
-      timeStamp: formatDate(item.createdAt),
-    });
-  });
-
-  renderData(ARRAY_OF_MESSAGES);
-  scrollToEnd();
-  connectToWebSocket(token);
-  DOM_ELEMENTS.DIALOG_CONFIRMATION?.close();
-  DOM_ELEMENTS.DIALOG_SETTINGS?.showModal();
 }
 
 async function nameConfirmationHandler() {
-  if (DOM_ELEMENTS.SETTINGS_INPUT && isInputValid(DOM_ELEMENTS.SETTINGS_INPUT.value)) {
-    setCookie("name", DOM_ELEMENTS.SETTINGS_INPUT?.value);
+  if (DOM_ELEMENTS.USER_INPUT.NAME && isInputValid(DOM_ELEMENTS.USER_INPUT.NAME.value)) {
+    webSocket.close();
+    setCookie("name", DOM_ELEMENTS.USER_INPUT.NAME?.value);
 
     const token = getCookie("token");
-    await sendUserData(import.meta.env.VITE_API_URL, token, DOM_ELEMENTS.SETTINGS_INPUT?.value);
-    DOM_ELEMENTS.DIALOG_SETTINGS?.close();
+    await sendUserData(import.meta.env.VITE_API_URL, token, DOM_ELEMENTS.USER_INPUT.NAME?.value);
+    clearInput(DOM_ELEMENTS.USER_INPUT.NAME);
+    DOM_ELEMENTS.DIALOG.SETTINGS?.close();
   } else showError("Некорректное имя");
 }
 
-function scrollToEnd() {
-  if (DOM_ELEMENTS.MESSAGES_CONTAINER) {
-    DOM_ELEMENTS.MESSAGES_CONTAINER.scrollTop = DOM_ELEMENTS.MESSAGES_CONTAINER.scrollHeight;
-  }
-}
-
-function lazyMessageLoading() {
+function lazyLoadingHandler() {
   if (DOM_ELEMENTS.MESSAGES_CONTAINER) {
     let old_height = DOM_ELEMENTS.MESSAGES_CONTAINER.scrollHeight;
-    if (DOM_ELEMENTS.MESSAGES_CONTAINER.scrollTop === 0) {
+
+    if (DOM_ELEMENTS.MESSAGES_CONTAINER.scrollTop === 0 && ARRAY_OF_MESSAGES.length > 0) {
       renderData(ARRAY_OF_MESSAGES);
       let new_height = DOM_ELEMENTS.MESSAGES_CONTAINER.scrollHeight;
       DOM_ELEMENTS.MESSAGES_CONTAINER.scrollTop = new_height - old_height;
+    } else if (!ARRAY_OF_MESSAGES.length) {
+      createHistoryLoadedMessage();
+      DOM_ELEMENTS.MESSAGES_CONTAINER?.removeEventListener("scroll", lazyLoadingHandler);
     }
   }
 }
 
+function quitHandler() {
+  removeCookie("token");
+  removeCookie("name");
+  webSocket.close();
+  DOM_ELEMENTS.DIALOG.AUTHENTICATION?.showModal();
+}
+
 ["keydown", "submit"].forEach((event) => DOM_ELEMENTS.SEND_MESSAGE_FORM?.addEventListener(event, messageSubmitHandler));
-DOM_ELEMENTS.GET_CODE?.addEventListener("click", getCodeHandler);
-DOM_ELEMENTS.ENTER_CODE?.addEventListener("click", enterCodeHandler);
-DOM_ELEMENTS.CONFIRMATION_BUTTON?.addEventListener("click", codeConfirmationHandler);
-DOM_ELEMENTS.SETTINGS_BUTTON?.addEventListener("click", nameConfirmationHandler);
-DOM_ELEMENTS.MESSAGES_CONTAINER?.addEventListener("scroll", lazyMessageLoading);
+DOM_ELEMENTS.BUTTON.GET_CODE?.addEventListener("click", getCodeHandler);
+DOM_ELEMENTS.BUTTON.ENTER_CODE?.addEventListener("click", enterCodeHandler);
+DOM_ELEMENTS.BUTTON.CONFIRMATION?.addEventListener("click", codeConfirmationHandler);
+DOM_ELEMENTS.BUTTON.SETTINGS?.addEventListener("click", nameConfirmationHandler);
+DOM_ELEMENTS.BUTTON.QUIT?.addEventListener("click", quitHandler);
+DOM_ELEMENTS.MESSAGES_CONTAINER?.addEventListener("scroll", lazyLoadingHandler);
+DOM_ELEMENTS.MESSAGES_CONTAINER?.addEventListener("scroll", showScrollButton);
+DOM_ELEMENTS.BUTTON.SCROLL?.addEventListener("click", scrollToEnd);

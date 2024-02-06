@@ -1,5 +1,6 @@
 import { getCookie } from "typescript-cookie";
 import { createTemplateContent, formatDate } from "./helpers";
+import { scrollToEnd } from "./helpers";
 
 let webSocket: WebSocket;
 
@@ -19,20 +20,22 @@ const connectToWebSocket = (token?: string) => {
     createTemplateContent(
       {
         name: userMessageInfo.user.name,
+        email: userMessageInfo.user.email,
         message: userMessageInfo.text,
         timeStamp: formatDate(userMessageInfo.createdAt),
       },
       "beforeend"
     );
+    scrollToEnd();
   };
 
   webSocket.onclose = () => {
     console.log("[onclose]");
 
-    setTimeout(() => {
-      const token = getCookie("token");
+    const token = getCookie("token");
+    if (token) {
       connectToWebSocket(token);
-    }, 1000);
+    }
   };
 
   webSocket.onerror = () => {
