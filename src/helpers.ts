@@ -1,8 +1,5 @@
 import { DOM_ELEMENTS } from "./DOM-elements";
 
-const initialScrollTop = 915;
-const fullContentScrollTop = 20664;
-
 export const isMessageValid = (message: string) => {
   return message.trim().length > 0;
 };
@@ -80,8 +77,14 @@ export const createHistoryLoadedMessage = () => {
 
 export function showScrollButton() {
   let currentScrollTop = DOM_ELEMENTS.MESSAGES_CONTAINER?.scrollTop;
+  let currentClientHeight = DOM_ELEMENTS.MESSAGES_CONTAINER?.clientHeight;
+  let currentScrollHeight = DOM_ELEMENTS.MESSAGES_CONTAINER?.scrollHeight;
+  let difference;
 
-  if (currentScrollTop === initialScrollTop || currentScrollTop === fullContentScrollTop) {
+  if (currentScrollHeight && currentScrollTop) {
+    difference = currentScrollHeight - currentScrollTop;
+  }
+  if (difference === currentClientHeight) {
     DOM_ELEMENTS.BUTTON.SCROLL?.classList.add("hide");
   } else DOM_ELEMENTS.BUTTON.SCROLL?.classList.remove("hide");
 }
@@ -89,6 +92,6 @@ export function showScrollButton() {
 export function scrollToEnd() {
   if (DOM_ELEMENTS.MESSAGES_CONTAINER) {
     DOM_ELEMENTS.MESSAGES_CONTAINER.scrollTop = DOM_ELEMENTS.MESSAGES_CONTAINER.scrollHeight;
-    DOM_ELEMENTS.BUTTON.SCROLL?.classList.toggle("hide");
+    DOM_ELEMENTS.BUTTON.SCROLL?.classList.add("hide");
   }
 }
