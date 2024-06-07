@@ -1,4 +1,5 @@
 import { DOM_ELEMENTS } from "./DOM-elements";
+import { getCookie } from "typescript-cookie";
 
 export const isMessageValid = (message: string) => {
   return message.trim().length > 0;
@@ -55,12 +56,13 @@ export const createTemplateContent = (
   insertPosition?: InsertPosition
 ) => {
   const markupInsertPosition = (insertPosition && insertPosition) || "afterbegin";
-  const CHAT_MEMBER = data.email === "kirina2504@gmail.com" ? "chat-member-1" : "chat-member-2";
+  const CHAT_MEMBER = data.email === getCookie("email") ? "chat-member-1" : "chat-member-2";
   const markup = `
   <li class="message__wrapper-list-item ${CHAT_MEMBER}">
   <p class="message__wrapper-list-item-text">${data.name}: ${data.message}</p>
   <span class="message__wrapper-list-item-timestamp">${data.timeStamp ?? "18:45"}</span>
-  </li>`;
+  </li>
+  `;
 
   DOM_ELEMENTS.MESSAGES_LIST?.insertAdjacentHTML(markupInsertPosition, markup);
 };

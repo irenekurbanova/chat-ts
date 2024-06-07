@@ -21,6 +21,7 @@ window.onload = async () => {
     await getMessagesHistory(import.meta.env.VITE_MESSAGES_API_URL, getCookie("token"));
 
     renderData(ARRAY_OF_MESSAGES);
+
     scrollToEnd();
   } else DOM_ELEMENTS.DIALOG.AUTHENTICATION?.showModal();
 };
@@ -42,8 +43,10 @@ function getCodeHandler(event: Event) {
 
   if (DOM_ELEMENTS.USER_INPUT.EMAIL && isEmailValid(DOM_ELEMENTS.USER_INPUT.EMAIL?.value)) {
     getToken(import.meta.env.VITE_API_URL, DOM_ELEMENTS.USER_INPUT.EMAIL?.value);
-    clearInput(DOM_ELEMENTS.USER_INPUT.EMAIL);
+    setCookie("email", DOM_ELEMENTS.USER_INPUT.EMAIL.value);
     DOM_ELEMENTS.DIALOG.AUTHENTICATION?.close();
+    DOM_ELEMENTS.DIALOG.CONFIRMATION?.showModal();
+    clearInput(DOM_ELEMENTS.USER_INPUT.EMAIL);
   } else {
     showError("Некорректный email");
   }

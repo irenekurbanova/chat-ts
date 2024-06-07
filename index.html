@@ -54,7 +54,7 @@
     </dialog>
     <dialog class="dialog" id="authentication">
       <div class="dialog__wrapper">
-        <form class="controls__wrapper" method="dialog">
+        <form class="controls__wrapper">
           <p>Авторизация</p>
           <button type="submit" class="dialog__wrapper-button">
             <svg viewBox="0 0 24 24" width="16" height="16">
@@ -62,19 +62,19 @@
             </svg>
           </button>
         </form>
-        <form class="authentication__form" method="dialog">
+        <form class="authentication__form">
           <label>Почта</label>
-          <input class="authentication__form-input" name="email" type="email" required />
+          <input class="authentication__form-input" name="email" type="email" autocomplete="email" required />
           <div class="authentication__form-buttons">
-            <button type="submit" id="get-code">Получить код</button>
-            <button type="button" id="enter-code">Ввести код</button>
+            <button id="get-code">Получить код</button>
+            <button id="enter-code">Ввести код</button>
           </div>
         </form>
       </div>
     </dialog>
     <dialog class="dialog" id="confirmation">
       <div class="dialog__wrapper">
-        <form class="controls__wrapper" method="dialog">
+        <form class="controls__wrapper">
           <p>Настройки</p>
           <button type="submit" class="dialog__wrapper-button">
             <svg viewBox="0 0 24 24" width="16" height="16">
@@ -82,7 +82,7 @@
             </svg>
           </button>
         </form>
-        <form class="confirmation__form" method="dialog">
+        <form class="confirmation__form">
           <label>Код</label>
           <input class="confirmation__form-input" type="text" name="token" required />
           <button type="submit" class="confirmation__form-button">Войти</button>

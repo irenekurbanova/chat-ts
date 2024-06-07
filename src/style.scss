@@ -59,14 +59,14 @@ button {
   position: absolute;
   right: 28px;
   bottom: 18px;
-  background: transparent;
+  background: #fff;
   border: 1px solid;
   padding: 0;
   place-items: center;
   display: flex;
 }
 
-.scroll-down-button.hide {
+.hide {
   display: none;
 }
 
